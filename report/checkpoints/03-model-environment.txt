@@ -1,0 +1,21 @@
+Colab model dependencies: pip install -r requirements-colab.txt
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.6/12.6 MB 79.0 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 835.4/835.4 kB 43.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 889.0/889.0 kB 51.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.1/43.1 MB 24.2 MB/s eta 0:00:00
+
+install_exit_code: 0
+
+Fresh-process model imports and actual NF4 CUDA forward:
+/usr/local/lib/python3.13/dist-packages/bitsandbytes/backends/cuda/ops.py:957: UserWarning: inner dimension (16) is not aligned for fast kernel with blocksize=64, falling back to slower implementation.
+  warn(
+transformers 5.19.0
+peft 0.21.2
+trl 1.9.2
+accelerate 1.15.0
+bitsandbytes 0.50.2
+GPU: Tesla T4
+NF4 CUDA forward: OK (2, 8)
+Qwen3VL, AutoProcessor, PEFT, TRL imports: OK
+
+check_exit_code: 0

@@ -1,0 +1,21 @@
+{
+  "kept_training_images": 1422,
+  "removed_from_training_targets_only": [
+    {
+      "image_id": "vlcsnap-00058",
+      "object_index": 1,
+      "reason": "Source box has zero area",
+      "object": {
+        "label": "crack",
+        "yolo": [
+          0.639062,
+          0.786111,
+          0.003125,
+          0.0
+        ]
+      }
+    }
+  ],
+  "source_splits_unchanged": true,
+  "policy": "keep image; remove only zero-area source boxes from training answer"
+}

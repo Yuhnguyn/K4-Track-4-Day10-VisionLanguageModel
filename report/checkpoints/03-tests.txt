@@ -1,0 +1,8 @@
+Colab T4; real dataset via D10_RAW
+python -m pytest -q tests student_checks
+
+........................................................................ [ 70%]
+..............................                                           [100%]
+102 passed in 3.06s
+
+exit_code: 0

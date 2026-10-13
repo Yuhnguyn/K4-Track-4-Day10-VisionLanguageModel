@@ -24,6 +24,10 @@ PROMPT = (
 )
 
 
+class ZeroAreaSourceBox(ValueError):
+    """Source annotation has zero extent; train-only filtering is explicit."""
+
+
 def yolo_to_box(label, yolo):
     if label not in CLASSES:
         raise ValueError(f"Unknown label: {label}")
@@ -34,7 +38,7 @@ def yolo_to_box(label, yolo):
         raise ValueError("YOLO must contain four finite numbers in [0,1]")
     xc, yc, w, h = yolo
     if w <= 0 or h <= 0:
-        raise ValueError("Source box has zero area")
+        raise ZeroAreaSourceBox("Source box has zero area")
     corners = (xc - w / 2, yc - h / 2, xc + w / 2, yc + h / 2)
     box = [max(0, min(1000, round(v * 1000))) for v in corners]
     if box[2] <= box[0] or box[3] <= box[1]:
@@ -50,6 +54,22 @@ def objects_to_answer(objects):
 
 def box_to_pixels(box, width, height):
     return tuple(v * size / 1000 for v, size in zip(box, (width, height, width, height)))
+
+
+def training_target(row, split="train"):
+    """Approved policy: keep image and other boxes; return an explicit removal log."""
+    if split != "train":
+        raise ValueError("Training-only filtering must not change val/test targets")
+    kept, removed = [], []
+    for index, obj in enumerate(row["objects"]):
+        try:
+            yolo_to_box(obj["label"], obj["yolo"])
+        except ZeroAreaSourceBox:
+            removed.append({"image_id": row["image_id"], "object_index": index,
+                            "reason": "Source box has zero area", "object": obj})
+        else:
+            kept.append(obj)
+    return {"answer": objects_to_answer(kept), "removed_annotations": removed}
 
 
 def verify_coordinates(data_dir="data", out_dir="report/checkpoints"):

@@ -65,3 +65,26 @@ def test_scale_mismatch_with_official_scorer_on_synthetic_fixture():
 def test_prompt_matches_target_contract():
     assert all(label in PROMPT for label in ('pothole', 'crack', 'manhole'))
     assert '0-1000' in PROMPT and 'bbox_2d' in PROMPT and 'return []' in PROMPT
+
+
+def test_approved_train_policy_preserves_source_and_other_boxes():
+    from copy import deepcopy
+    from student_labels import training_target
+    row = {'image_id': 'train-example', 'objects': [
+        {'label': 'crack', 'yolo': [0.5, 0.5, 0.2, 0.0]},
+        {'label': 'pothole', 'yolo': [0.5, 0.5, 0.2, 0.2]},
+    ]}
+    before = deepcopy(row)
+    target = training_target(row)
+    assert row == before
+    assert len(target['removed_annotations']) == 1
+    assert json.loads(target['answer']) == [{'label': 'pothole', 'bbox_2d': [400, 400, 600, 600]}]
+    with pytest.raises(ValueError, match='Training-only'):
+        training_target(row, split='test')
+
+
+def test_train_policy_does_not_hide_other_invalid_geometry():
+    from student_labels import training_target
+    row = {'image_id': 'tiny-box', 'objects': [{'label': 'crack', 'yolo': [0.5, 0.5, 0.0001, 0.2]}]}
+    with pytest.raises(ValueError, match='collapses'):
+        training_target(row)
