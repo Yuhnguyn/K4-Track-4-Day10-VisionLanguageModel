@@ -1,0 +1,62 @@
+Execution target: Colab Tesla T4
+Command: ['/usr/bin/python3', '/content/day10_coach_repo/work/cp2_notebook_cells.py']
+D10_RAW points to the real extracted dataset; CP1/CP2 only, no model run.
+
+dataset_version: d10-21e4070301
+split   images  sessions  pothole  crack  manhole
+train 1422 13 1074 1750 691
+val 276 2 66 470 103
+test 311 3 121 299 163
+Session overlap: 0
+Verified image files: 2009
+Boxes extending outside image: 45
+Zero-area annotations (preserved, not silently removed): [{'split': 'train', 'image_id': 'vlcsnap-00058', 'object_index': 1, 'label': 'crack', 'yolo': [0.639062, 0.786111, 0.003125, 0.0]}]
+First displayed training label: {"image_id": "20250219_164714", "session": "phone-20250219", "objects": [{"label": "crack", "yolo": [0.573438, 0.497223, 0.125, 0.138889]}, {"label": "crack", "yolo": [0.729688, 0.694444, 0.234375, 0.333333]}, {"label": "pothole", "yolo": [0.253125, 0.454166, 0.21875, 0.136111]}, {"label": "pothole", "yolo": [0.414843, 0.318055, 0.067187, 0.041667]}, {"label": "pothole", "yolo": [0.941407, 0.443055, 0.076563, 0.052777]}]}
+<IPython.core.display.Image object>
+{
+  "dataset_version": "d10-21e4070301",
+  "scale": "norm1000",
+  "splits": {
+    "train": {
+      "images": 1422,
+      "converted_objects": 3514,
+      "images_requiring_explicit_training_policy": 1
+    },
+    "val": {
+      "images": 276,
+      "converted_objects": 639,
+      "images_requiring_explicit_training_policy": 0
+    },
+    "test": {
+      "images": 311,
+      "converted_objects": 583,
+      "images_requiring_explicit_training_policy": 0
+    }
+  },
+  "rejected_objects": [
+    {
+      "split": "train",
+      "image_id": "vlcsnap-00058",
+      "object_index": 1,
+      "reason": "Source box has zero area",
+      "object": {
+        "label": "crack",
+        "yolo": [
+          0.639062,
+          0.786111,
+          0.003125,
+          0.0
+        ]
+      }
+    }
+  ],
+  "max_roundtrip_error_px_vs_clipped_source": 0.32000000000005,
+  "example": {
+    "image_id": "20250216_164325",
+    "answer": "[{\"label\":\"crack\",\"bbox_2d\":[430,467,583,506]},{\"label\":\"pothole\",\"bbox_2d\":[361,475,414,522]},{\"label\":\"manhole\",\"bbox_2d\":[317,481,616,625]},{\"label\":\"pothole\",\"bbox_2d\":[583,500,627,614]},{\"label\":\"crack\",\"bbox_2d\":[580,508,655,614]},{\"label\":\"pothole\",\"bbox_2d\":[259,517,311,572]},{\"label\":\"crack\",\"bbox_2d\":[397,628,447,717]},{\"label\":\"crack\",\"bbox_2d\":[339,683,398,808]},{\"label\":\"crack\",\"bbox_2d\":[158,789,361,994]}]"
+  }
+}
+Locate all potholes, cracks, and manholes in this image. Return only a JSON list, without markdown or explanations. Each object must have "label" (one of "pothole", "crack", "manhole") and "bbox_2d": [x1,y1,x2,y2], the top-left and bottom-right corners. Use integer coordinates on the normalized 0-1000 scale: x is relative to image width and y is relative to image height, not pixels. Require 0 <= x1 < x2 <= 1000 and 0 <= y1 < y2 <= 1000. Order objects from top to bottom, then left to right. If there are no such objects, return [].
+<IPython.core.display.Image object>
+
+exit_code: 0

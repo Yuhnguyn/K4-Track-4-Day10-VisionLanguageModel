@@ -1,0 +1,9 @@
+Execution target: Colab Tesla T4
+Command: ['/usr/bin/python3', '-m', 'pytest', '-q', 'tests', 'student_checks']
+D10_RAW points to the real extracted dataset; CP1/CP2 only, no model run.
+
+........................................................................ [ 77%]
+.....................                                                    [100%]
+93 passed in 0.72s
+
+exit_code: 0

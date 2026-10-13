@@ -1,0 +1,43 @@
+{
+  "dataset_version": "d10-21e4070301",
+  "scale": "norm1000",
+  "splits": {
+    "train": {
+      "images": 1422,
+      "converted_objects": 3514,
+      "images_requiring_explicit_training_policy": 1
+    },
+    "val": {
+      "images": 276,
+      "converted_objects": 639,
+      "images_requiring_explicit_training_policy": 0
+    },
+    "test": {
+      "images": 311,
+      "converted_objects": 583,
+      "images_requiring_explicit_training_policy": 0
+    }
+  },
+  "rejected_objects": [
+    {
+      "split": "train",
+      "image_id": "vlcsnap-00058",
+      "object_index": 1,
+      "reason": "Source box has zero area",
+      "object": {
+        "label": "crack",
+        "yolo": [
+          0.639062,
+          0.786111,
+          0.003125,
+          0.0
+        ]
+      }
+    }
+  ],
+  "max_roundtrip_error_px_vs_clipped_source": 0.32000000000005,
+  "example": {
+    "image_id": "20250216_164325",
+    "answer": "[{\"label\":\"crack\",\"bbox_2d\":[430,467,583,506]},{\"label\":\"pothole\",\"bbox_2d\":[361,475,414,522]},{\"label\":\"manhole\",\"bbox_2d\":[317,481,616,625]},{\"label\":\"pothole\",\"bbox_2d\":[583,500,627,614]},{\"label\":\"crack\",\"bbox_2d\":[580,508,655,614]},{\"label\":\"pothole\",\"bbox_2d\":[259,517,311,572]},{\"label\":\"crack\",\"bbox_2d\":[397,628,447,717]},{\"label\":\"crack\",\"bbox_2d\":[339,683,398,808]},{\"label\":\"crack\",\"bbox_2d\":[158,789,361,994]}]"
+  }
+}
