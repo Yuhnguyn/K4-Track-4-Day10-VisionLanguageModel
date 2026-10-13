@@ -1,0 +1,10 @@
+PRE-EDIT BASELINE ON COLAB T4 — no model experiments run.
+GPU: Tesla T4
+Torch: 2.11.0+cu130
+cwd: /content/day10_coach_repo
+command: ['/usr/bin/python3', '-m', 'pytest', '-q']
+
+...........................s.........................................    [100%]
+68 passed, 1 skipped in 0.38s
+
+exit_code: 0
