@@ -1,0 +1,143 @@
+{
+  "name": "E0-error-taxonomy",
+  "purpose": "Describes raw zero-shot output; does not replace the official scorer.",
+  "limitation": "On 640x360 images, pixel-scale coordinates stay inside 0-1000, so a range check cannot detect a wrong coordinate scale. Detecting that error needs geometric comparison by the official scorer, not this taxonomy.",
+  "split": "test",
+  "n_images": 311,
+  "scored_predictions": 311,
+  "missing_predictions": 0,
+  "parse_valid_rate": 0.5369774919614148,
+  "f1": 0.06497461928934012,
+  "f1_ci95": [
+    0.04408817635270541,
+    0.0877005347593583
+  ],
+  "per_class": {
+    "pothole": {
+      "precision": 0.2,
+      "recall": 0.06611570247933884,
+      "f1": 0.09937888198757765,
+      "tp": 8,
+      "fp": 32,
+      "fn": 113
+    },
+    "crack": {
+      "precision": 0.005050505050505051,
+      "recall": 0.0033444816053511705,
+      "f1": 0.004024144869215292,
+      "tp": 1,
+      "fp": 197,
+      "fn": 298
+    },
+    "manhole": {
+      "precision": 0.1402439024390244,
+      "recall": 0.1411042944785276,
+      "f1": 0.14067278287461774,
+      "tp": 23,
+      "fp": 141,
+      "fn": 140
+    },
+    "other": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0
+    }
+  },
+  "error_taxonomy_counts": {
+    "json_invalid_truncated": 144,
+    "duplicate_boxes": 49,
+    "plausible": 45,
+    "full_frame_sized_box": 45,
+    "touches_0_and_1000": 45,
+    "empty_answer": 44
+  },
+  "example_outputs": {
+    "json_invalid_truncated": [
+      {
+        "image_id": "vlcsnap-00200",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [909, 786, 1000, 829]}, {\"label\": \"manhole\", \"bbox_2d\": [770, 657, 843, 690]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbo"
+      },
+      {
+        "image_id": "vlcsnap-00207",
+        "raw": "[{\"label\": \"crack\", \"bbox_2d\": [0, 680, 1000, 750]}, {\"label\": \"crack\", \"bbox_2d\": [0, 700, 1000, 770]}, {\"label\": \"crack\", \"bbox_2d\": [0, 720, 1000, 790]}, {\"label\": \"crack\", \"bbox_2d\": [0, 740, 1000, 810]}, {\"label\": \"crack\", \"bbox_2d\": [0, 760, 1000, 830]}, {\"label\": \"crack\", \"bbox_2d\": [0, 780, 1000, 850]}, {\"label\": \"crack\", \"bbox_2d\": [0, 800, 1000, 870]}, {\"label\": \"crack\", \"bbox_2d\": [0, 8"
+      },
+      {
+        "image_id": "vlcsnap-00208",
+        "raw": "[{\"label\": \"crack\", \"bbox_2d\": [0, 680, 1000, 800]}, {\"label\": \"crack\", \"bbox_2d\": [0, 680, 1000, 800]}, {\"label\": \"crack\", \"bbox_2d\": [0, 680, 1000, 800]}, {\"label\": \"crack\", \"bbox_2d\": [0, 680, 1000, 800]}, {\"label\": \"crack\", \"bbox_2d\": [0, 680, 1000, 800]}, {\"label\": \"crack\", \"bbox_2d\": [0, 680, 1000, 800]}, {\"label\": \"crack\", \"bbox_2d\": [0, 680, 1000, 800]}, {\"label\": \"crack\", \"bbox_2d\": [0, 6"
+      }
+    ],
+    "empty_answer": [
+      {
+        "image_id": "vlcsnap-00201",
+        "raw": "[]"
+      },
+      {
+        "image_id": "vlcsnap-00203",
+        "raw": "[]"
+      },
+      {
+        "image_id": "vlcsnap-00205",
+        "raw": "[]"
+      }
+    ],
+    "duplicate_boxes": [
+      {
+        "image_id": "vlcsnap-00202",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [309, 684, 400, 714]}, {\"label\": \"manhole\", \"bbox_2d\": [309, 684, 400, 714]}]"
+      },
+      {
+        "image_id": "vlcsnap-00206",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [312, 670, 400, 714]}, {\"label\": \"manhole\", \"bbox_2d\": [312, 670, 400, 714]}]"
+      },
+      {
+        "image_id": "vlcsnap-00214",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [820, 738, 900, 776]}, {\"label\": \"crack\", \"bbox_2d\": [820, 738, 900, 776]}, {\"label\": \"crack\", \"bbox_2d\": [820, 738, 900, 776]}]"
+      }
+    ],
+    "plausible": [
+      {
+        "image_id": "vlcsnap-00204",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [257, 625, 329, 657]}, {\"label\": \"manhole\", \"bbox_2d\": [329, 625, 391, 657]}]"
+      },
+      {
+        "image_id": "vlcsnap-00211",
+        "raw": "[{\"label\": \"crack\", \"bbox_2d\": [120, 700, 380, 750]}, {\"label\": \"crack\", \"bbox_2d\": [550, 580, 600, 600]}, {\"label\": \"manhole\", \"bbox_2d\": [780, 450, 790, 470]}, {\"label\": \"manhole\", \"bbox_2d\": [780, 480, 790, 500]}]"
+      },
+      {
+        "image_id": "vlcsnap-2025-02-18-23h08m06s820",
+        "raw": "[{\"label\": \"crack\", \"bbox_2d\": [650, 450, 710, 475]}, {\"label\": \"manhole\", \"bbox_2d\": [650, 450, 710, 475]}]"
+      }
+    ],
+    "full_frame_sized_box": [
+      {
+        "image_id": "vlcsnap-00212",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [460, 627, 528, 657]}, {\"label\": \"crack\", \"bbox_2d\": [0, 657, 1000, 700]}, {\"label\": \"crack\", \"bbox_2d\": [0, 550, 1000, 600]}]"
+      },
+      {
+        "image_id": "vlcsnap-2025-02-18-23h10m39s932",
+        "raw": "[{\"label\": \"crack\", \"bbox_2d\": [0, 350, 1000, 700]}, {\"label\": \"crack\", \"bbox_2d\": [0, 350, 1000, 700]}, {\"label\": \"manhole\", \"bbox_2d\": [0, 600, 100, 650]}, {\"label\": \"manhole\", \"bbox_2d\": [0, 600, 100, 650]}]"
+      },
+      {
+        "image_id": "vlcsnap-2025-02-18-23h11m28s079",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [483, 600, 565, 630]}, {\"label\": \"crack\", \"bbox_2d\": [0, 800, 1000, 1000]}]"
+      }
+    ],
+    "touches_0_and_1000": [
+      {
+        "image_id": "vlcsnap-00212",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [460, 627, 528, 657]}, {\"label\": \"crack\", \"bbox_2d\": [0, 657, 1000, 700]}, {\"label\": \"crack\", \"bbox_2d\": [0, 550, 1000, 600]}]"
+      },
+      {
+        "image_id": "vlcsnap-2025-02-18-23h10m39s932",
+        "raw": "[{\"label\": \"crack\", \"bbox_2d\": [0, 350, 1000, 700]}, {\"label\": \"crack\", \"bbox_2d\": [0, 350, 1000, 700]}, {\"label\": \"manhole\", \"bbox_2d\": [0, 600, 100, 650]}, {\"label\": \"manhole\", \"bbox_2d\": [0, 600, 100, 650]}]"
+      },
+      {
+        "image_id": "vlcsnap-2025-02-18-23h11m28s079",
+        "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [483, 600, 565, 630]}, {\"label\": \"crack\", \"bbox_2d\": [0, 800, 1000, 1000]}]"
+      }
+    ]
+  }
+}

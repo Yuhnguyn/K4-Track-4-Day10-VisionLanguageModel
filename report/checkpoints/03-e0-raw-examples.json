@@ -1,0 +1,22 @@
+[
+  {
+    "image_id": "vlcsnap-00200",
+    "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [909, 786, 1000, 829]}, {\"label\": \"manhole\", \"bbox_2d\": [770, 657, 843, 690]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670, 843, 700]}, {\"label\": \"crack\", \"bbox_2d\": [750, 670,"
+  },
+  {
+    "image_id": "vlcsnap-00201",
+    "raw": "[]"
+  },
+  {
+    "image_id": "vlcsnap-00202",
+    "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [309, 684, 400, 714]}, {\"label\": \"manhole\", \"bbox_2d\": [309, 684, 400, 714]}]"
+  },
+  {
+    "image_id": "vlcsnap-00203",
+    "raw": "[]"
+  },
+  {
+    "image_id": "vlcsnap-00204",
+    "raw": "[{\"label\": \"manhole\", \"bbox_2d\": [257, 625, 329, 657]}, {\"label\": \"manhole\", \"bbox_2d\": [329, 625, 391, 657]}]"
+  }
+]

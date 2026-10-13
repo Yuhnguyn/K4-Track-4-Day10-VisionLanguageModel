@@ -1,0 +1,8 @@
+{
+  "split": "test",
+  "n_images": 311,
+  "inference_seconds_this_session": 1937.597118871,
+  "peak_vram_gb": 4.144761344,
+  "gpu": "Tesla T4",
+  "trainable_params": 0
+}
