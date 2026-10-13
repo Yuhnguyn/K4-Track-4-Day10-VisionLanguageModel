@@ -1,0 +1,9 @@
+Execution target: Colab Tesla T4
+Command: python scripts/prepare_data.py --zip work/road_damage_dataset.zip
+
+dataset_version : d10-21e4070301
+  train  1422 ảnh  boxes={'pothole': 1074, 'crack': 1750, 'manhole': 691}
+  val     276 ảnh  boxes={'pothole': 66, 'crack': 470, 'manhole': 103}
+  test    311 ảnh  boxes={'pothole': 121, 'crack': 299, 'manhole': 163}
+
+exit_code: 0

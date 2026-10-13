@@ -1,0 +1,15 @@
+Execution target: Colab Tesla T4
+Command: ['/usr/bin/python3', 'student_data.py']
+
+dataset_version: d10-21e4070301
+split   images  sessions  pothole  crack  manhole
+train 1422 13 1074 1750 691
+val 276 2 66 470 103
+test 311 3 121 299 163
+Session overlap: 0
+Verified image files: 2009
+Boxes extending outside image: 45
+Zero-area annotations (preserved, not silently removed): [{'split': 'train', 'image_id': 'vlcsnap-00058', 'object_index': 1, 'label': 'crack', 'yolo': [0.639062, 0.786111, 0.003125, 0.0]}]
+First displayed training label: {"image_id": "20250219_164714", "session": "phone-20250219", "objects": [{"label": "crack", "yolo": [0.573438, 0.497223, 0.125, 0.138889]}, {"label": "crack", "yolo": [0.729688, 0.694444, 0.234375, 0.333333]}, {"label": "pothole", "yolo": [0.253125, 0.454166, 0.21875, 0.136111]}, {"label": "pothole", "yolo": [0.414843, 0.318055, 0.067187, 0.041667]}, {"label": "pothole", "yolo": [0.941407, 0.443055, 0.076563, 0.052777]}]}
+
+exit_code: 0
