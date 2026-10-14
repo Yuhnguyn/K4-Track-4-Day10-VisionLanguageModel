@@ -1,8 +1,11 @@
 """Write the report from real scorer evidence; missing runs remain explicitly pending."""
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 
 
 def load(relative):
@@ -42,6 +45,26 @@ def main():
         comparison.append(f"{key.upper()}: F1={d['micro']['f1']:.4f}, CI95={d['f1_ci95']}, "
                           f"chênh E0={d['micro']['f1'] - e0['micro']['f1']:+.4f}.")
     pairwise = ' '.join(comparison) or 'Chưa có kết quả test E1–E3; chưa kết luận setup nào tốt nhất.'
+    value_note = ''
+    if len(trained) == 3:
+        value_best = max(trained, key=lambda key:
+                         (evidence[key]['micro']['f1'] - e0['micro']['f1']) /
+                         evidence[key]['meta']['train_minutes'])
+        value_note = (f"Nếu ưu tiên mức tăng F1 so với E0 trên mỗi phút train, tôi chọn "
+                      f"{value_best.upper()} làm phương án đáng cân nhắc nhất trên T4. "
+                      'Đây là tiêu chí chi phí được nêu rõ, không phải kiểm định ý nghĩa thống kê; '
+                      'VRAM, F1 từng lớp và CI95 trong bảng vẫn là các giới hạn của lựa chọn.')
+    trained_weakness = ''
+    if trained:
+        best_measured = max(trained, key=lambda key: evidence[key]['micro']['f1'])
+        weak = min(('pothole', 'crack', 'manhole'),
+                   key=lambda label: evidence[best_measured]['per_class'][label]['f1'])
+        values = evidence[best_measured]['per_class'][weak]
+        trained_weakness = (f"Ở {best_measured.upper()} (F1 tổng cao nhất trong các lượt đã chấm), "
+                            f"lớp yếu nhất là {weak}: F1={values['f1']:.4f}, "
+                            f"TP={values['tp']}, FP={values['fp']}, FN={values['fn']}. "
+                            'Cần phân biệt lỗi này với lỗi zero-shot của E0; phân bố phiên và box nhỏ '
+                            'có thể ảnh hưởng, nhưng chưa có kiểm định nhân quả cho các giả thuyết đó.')
     widths = ' '.join(f"{k.upper()}: {evidence[k]['f1_ci95'][1] - evidence[k]['f1_ci95'][0]:.4f}."
                       for k in ['e0'] + trained)
     e4text = []
@@ -51,6 +74,21 @@ def main():
     baseline = load('report/checkpoints/08-e4-choice.json').get('baseline')
     baseline_note = (f"Setup gốc chọn theo GUIDE: {baseline.upper()}, có F1 cao nhất trong ba setup cố định."
                      if baseline else 'Đang chờ đủ E1–E3 để chọn setup gốc theo GUIDE.')
+    ablation_conclusion = ''
+    if all(k in evidence for k in ('e4_data_size_0.1', 'e4_data_size_1.0')):
+        small, full = evidence['e4_data_size_0.1'], evidence['e4_data_size_1.0']
+        delta = full['micro']['f1'] - small['micro']['f1']
+        overlap = max(small['f1_ci95'][0], full['f1_ci95'][0]) <= min(small['f1_ci95'][1], full['f1_ci95'][1])
+        ablation_conclusion = (f"Chênh F1 (100% trừ 10%)={delta:+.4f}. "
+                               + ('Hai CI95 chồng nhau; không kết luận chắc về chênh lệch từ hai CI riêng lẻ.'
+                                  if overlap else 'Hai CI95 không chồng nhau; khác biệt rõ trên test này, '
+                                  'nhưng vẫn cần kiểm định ghép cặp và thêm phiên quay để kết luận rộng hơn.'))
+    scale_check = load('report/checkpoints/10-e1-wrong-scale.json')
+    scale_note = (f"Kiểm tra bằng dự đoán E1 thực tế: chấm đúng norm1000 cho F1="
+                  f"{evidence['e1']['micro']['f1']:.4f}; chấm cùng output nhầm là pixel cho F1="
+                  f"{scale_check['micro']['f1']:.4f}. Không huấn luyện hay sửa output trong kiểm tra này."
+                  if scale_check and 'e1' in evidence else
+                  'Chưa có phép chấm lại toàn bộ dự đoán theo thang sai; không ghi một số F1 giả cho kiểm chứng này.')
     live = load('report/checkpoints/04-e1-kaggle-progress.json') if 'e1' not in evidence else {}
     live_note = ''
     if live:
@@ -106,7 +144,7 @@ Khi vẽ, x nhân `640/1000`, y nhân `360/1000`. Nhầm norm1000 thành pixel s
 phóng khác nhau theo hai trục, giảm IoU và thường giảm F1; không thể suy ra một F1 cụ thể khi chưa chấm.
 Round-trip thực tế ghi sai số tối đa 0,32 pixel so với box nguồn đã kẹp, phù hợp sai số làm tròn.
 Ví dụ `[400,400,600,600]` tương ứng pixel `[256,144,384,216]`.
-Chưa có phép chấm lại toàn bộ dự đoán theo thang sai; không ghi một số F1 giả cho kiểm chứng này.
+{scale_note}
 
 ### Câu 4 — Mask loss
 
@@ -144,6 +182,7 @@ Chỉ bỏ annotation này khỏi target train, giữ ảnh và audit; giữ ngu
 ### Câu 7 — So sánh E1/E2/E3
 
 {pairwise}
+{value_note}
 Đánh giá lợi ích phải đặt F1 và F1 từng lớp cạnh thời gian/VRAM.
 E2 thêm khoảng 109M tham số projector; E3 cần gradient qua ViT nên có thể tốn VRAM/thời gian hơn.
 Không đồng nhất dự đoán lý thuyết về chi phí với số đo. Các số thực tế nằm trong bảng.
@@ -165,6 +204,8 @@ Hình dạng dài/mảnh, box nhỏ, bóng đổ/vạch đường và định ng
 cần ảnh lỗi để đối chiếu. Box nhỏ khiến lệch vài pixel có thể giảm IoU mạnh.
 Ảnh minh họa dùng GT xanh và dự đoán đỏ, cả hai đều đổi norm1000 sang pixel trước khi vẽ.
 
+{trained_weakness}
+
 {chr(10).join(figures) if figures else 'Ảnh dự đoán sẽ được tạo từ output model thực tế khi lượt GPU hoàn tất.'}
 
 ### Câu 10 — E4
@@ -178,6 +219,7 @@ Mức 10% dùng 142 ảnh đầu theo thứ tự split. Phân bố phiên/lớp 
 nên tác động đo được gồm giảm độ đa dạng và thay đổi thành phần mẫu, không chỉ số lượng.
 {' '.join(e4text) if e4text else 'Chưa có bằng chứng E4; chưa kết luận tác động của kích thước dữ liệu.'}
 {'Mức 10% chưa hoàn tất; chưa thể kết luận ablation.' if 'e4_data_size_0.1' not in evidence else ''}
+{ablation_conclusion}
 Đọc kết quả kèm CI95 và giới hạn test nhỏ; không lựa chọn lại siêu tham số dựa vào test.
 
 ## Nhìn lại

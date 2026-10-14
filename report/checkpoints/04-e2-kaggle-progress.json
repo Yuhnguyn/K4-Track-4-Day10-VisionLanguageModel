@@ -1,6 +1,6 @@
 {
   "source": "Kaggle live stdout from k4-track4-day10-vlm-lora-run version 4",
-  "status": "Training complete",
+  "status": "Training complete; test summary available",
   "training": {
     "lora_target_modules": 252,
     "projector_tensors_unfrozen": 24,
@@ -38,6 +38,9 @@
     "peak_vram_gb": 8.941280256,
     "gpu": "Tesla T4"
   },
-  "scorer_stdout_summary": [],
+  "scorer_stdout_summary": [
+    "E2 [test] n=311 valid=0.994 P=0.329 R=0.288 F1=0.307 CI95=0.270-0.349 meanIoU=0.668 FP/img=1.10",
+    "E2 | F1: 0.3071 | CI95: [0.2697, 0.3485] | valid: 0.9936 | FP/img: 1.103 | F1 theo lá»p: {'pothole': 0.1659, 'crack': 0.246, 'manhole': 0.5263, 'other': 0.0}"
+  ],
   "limitation": "Scorer stdout rounds metrics. This checkpoint is not report/evidence/e2.json and does not replace the scorer output file."
 }

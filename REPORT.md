@@ -85,6 +85,7 @@ Chỉ bỏ annotation này khỏi target train, giữ ảnh và audit; giữ ngu
 ### Câu 7 — So sánh E1/E2/E3
 
 Chưa có kết quả test E1–E3; chưa kết luận setup nào tốt nhất.
+
 Đánh giá lợi ích phải đặt F1 và F1 từng lớp cạnh thời gian/VRAM.
 E2 thêm khoảng 109M tham số projector; E3 cần gradient qua ViT nên có thể tốn VRAM/thời gian hơn.
 Không đồng nhất dự đoán lý thuyết về chi phí với số đo. Các số thực tế nằm trong bảng.
@@ -106,6 +107,8 @@ Hình dạng dài/mảnh, box nhỏ, bóng đổ/vạch đường và định ng
 cần ảnh lỗi để đối chiếu. Box nhỏ khiến lệch vài pixel có thể giảm IoU mạnh.
 Ảnh minh họa dùng GT xanh và dự đoán đỏ, cả hai đều đổi norm1000 sang pixel trước khi vẽ.
 
+
+
 Ảnh dự đoán sẽ được tạo từ output model thực tế khi lượt GPU hoàn tất.
 
 ### Câu 10 — E4
@@ -119,6 +122,7 @@ Mức 10% dùng 142 ảnh đầu theo thứ tự split. Phân bố phiên/lớp 
 nên tác động đo được gồm giảm độ đa dạng và thay đổi thành phần mẫu, không chỉ số lượng.
 Chưa có bằng chứng E4; chưa kết luận tác động của kích thước dữ liệu.
 Mức 10% chưa hoàn tất; chưa thể kết luận ablation.
+
 Đọc kết quả kèm CI95 và giới hạn test nhỏ; không lựa chọn lại siêu tham số dựa vào test.
 
 ## Nhìn lại
