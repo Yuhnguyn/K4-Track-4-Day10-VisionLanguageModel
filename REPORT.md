@@ -3,7 +3,7 @@
 Họ tên: Nguyễn Huy
 `dataset_version`: `d10-21e4070301`
 
-Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E1, E2, E3, E4.
+Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E1, E2, E3, E4 (chưa đủ cả 10% và 100%).
 Mọi số trong bảng lấy từ scorer của đề. Dấu — nghĩa là chưa đo, không phải 0.
 E0 là lượt Colab T4 đã có trong lịch sử repo; E1–E4 chạy qua Kaggle CLI.
 
@@ -114,9 +114,11 @@ Biến chọn là `data_size`: 10% so với 100% ảnh train, các siêu tham s�
 kể cả 300 optimizer steps và effective batch=8. Như vậy mức 10% lặp lại dữ liệu nhiều hơn;
 đây là hiệu ứng giảm độ đa dạng ở cùng ngân sách bước, không phải cùng số epoch.
 Mốc 100% dùng lại đúng dự đoán của setup gốc theo GUIDE; chỉ train thêm mức 10%.
+Đang chờ đủ E1–E3 để chọn setup gốc theo GUIDE.
 Mức 10% dùng 142 ảnh đầu theo thứ tự split. Phân bố phiên/lớp có thể khác toàn bộ train,
 nên tác động đo được gồm giảm độ đa dạng và thay đổi thành phần mẫu, không chỉ số lượng.
 Chưa có bằng chứng E4; chưa kết luận tác động của kích thước dữ liệu.
+Mức 10% chưa hoàn tất; chưa thể kết luận ablation.
 Đọc kết quả kèm CI95 và giới hạn test nhỏ; không lựa chọn lại siêu tham số dựa vào test.
 
 ## Nhìn lại

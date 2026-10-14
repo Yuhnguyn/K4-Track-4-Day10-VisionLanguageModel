@@ -36,9 +36,11 @@ def main():
 
     for relative in ('report/evidence', 'report/figures'):
         directory(relative)
-    for tag in ('e1', 'e2', 'e1_d10'):
+    for tag in ('e1', 'e2', 'e3', 'e1_d10', 'e2_d10', 'e3_d10'):
         fetch(f'day10-lab/work/{tag}/run.json', f'work/{tag}/run.json')
         fetch(f'day10-lab/work/{tag}.jsonl', f'work/{tag}.jsonl')
+    fetch('day10-lab/report/checkpoints/08-e4-choice.json',
+          'report/checkpoints/08-e4-choice.json')
     for log in ('fast-pair.log', 'e2-worker-fixed.log', 'e4-watch.log', 'e4-worker-live.log'):
         fetch(log, 'work/' + log)
     print(json.dumps({'updated': downloaded}, ensure_ascii=False))

@@ -15,8 +15,8 @@ def main():
                 for p in (ROOT / 'report/evidence').glob('*.json')}
     e0 = evidence['e0']
     pending = [key.upper() for key in ('e1', 'e2', 'e3') if key not in evidence]
-    if not any(k.startswith('e4') for k in evidence):
-        pending.append('E4')
+    if not all(k in evidence for k in ('e4_data_size_0.1', 'e4_data_size_1.0')):
+        pending.append('E4 (chưa đủ cả 10% và 100%)')
     table = ['| Mã | Tham số huấn luyện | VRAM GB | Phút train | F1 | CI95 | FP/ảnh | pothole | crack | manhole |',
              '|---|---:|---:|---:|---:|---|---:|---:|---:|---:|']
     for key in ['e0', 'e1', 'e2', 'e3'] + sorted(k for k in evidence if k.startswith('e4')):
@@ -48,6 +48,9 @@ def main():
     for key in sorted(k for k in evidence if k.startswith('e4')):
         d = evidence[key]
         e4text.append(f"{key}: F1={d['micro']['f1']:.4f}, CI95={d['f1_ci95']}.")
+    baseline = load('report/checkpoints/08-e4-choice.json').get('baseline')
+    baseline_note = (f"Setup gốc chọn theo GUIDE: {baseline.upper()}, có F1 cao nhất trong ba setup cố định."
+                     if baseline else 'Đang chờ đủ E1–E3 để chọn setup gốc theo GUIDE.')
     live = load('report/checkpoints/04-e1-kaggle-progress.json') if 'e1' not in evidence else {}
     live_note = ''
     if live:
@@ -170,9 +173,11 @@ Biến chọn là `data_size`: 10% so với 100% ảnh train, các siêu tham s�
 kể cả 300 optimizer steps và effective batch=8. Như vậy mức 10% lặp lại dữ liệu nhiều hơn;
 đây là hiệu ứng giảm độ đa dạng ở cùng ngân sách bước, không phải cùng số epoch.
 Mốc 100% dùng lại đúng dự đoán của setup gốc theo GUIDE; chỉ train thêm mức 10%.
+{baseline_note}
 Mức 10% dùng 142 ảnh đầu theo thứ tự split. Phân bố phiên/lớp có thể khác toàn bộ train,
 nên tác động đo được gồm giảm độ đa dạng và thay đổi thành phần mẫu, không chỉ số lượng.
 {' '.join(e4text) if e4text else 'Chưa có bằng chứng E4; chưa kết luận tác động của kích thước dữ liệu.'}
+{'Mức 10% chưa hoàn tất; chưa thể kết luận ablation.' if 'e4_data_size_0.1' not in evidence else ''}
 Đọc kết quả kèm CI95 và giới hạn test nhỏ; không lựa chọn lại siêu tham số dựa vào test.
 
 ## Nhìn lại
