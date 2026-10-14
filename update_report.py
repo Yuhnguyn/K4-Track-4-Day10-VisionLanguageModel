@@ -48,6 +48,14 @@ def main():
     for key in sorted(k for k in evidence if k.startswith('e4')):
         d = evidence[key]
         e4text.append(f"{key}: F1={d['micro']['f1']:.4f}, CI95={d['f1_ci95']}.")
+    live = load('report/checkpoints/04-e1-kaggle-progress.json') if 'e1' not in evidence else {}
+    live_note = ''
+    if live:
+        live_note = ('\nKết quả E1 đã hiện trong stdout Kaggle version 4: F1=0,2596, '
+                     'CI95=[0,2278; 0,2978], JSON hợp lệ=0,9646, FP/ảnh=1,466; '
+                     'train=45,5127 phút, VRAM train=7,1231 GB. '
+                     'Đây là số được log, có làm tròn; đang chờ lấy file scorer JSON đầy đủ. '
+                     'Checkpoint này không thay thế report/evidence/e1.json.\n')
     figures = []
     for summary in (ROOT / 'report/figures').glob('*-summary.json') if (ROOT / 'report/figures').exists() else []:
         for tile in json.loads(summary.read_text(encoding='utf-8'))['tiles']:
@@ -61,6 +69,7 @@ Họ tên: Nguyễn Huy
 Trạng thái: {'Đã có bằng chứng E0–E4.' if not pending else 'Chưa hoàn tất; còn thiếu bằng chứng ' + ', '.join(pending) + '.'}
 Mọi số trong bảng lấy từ scorer của đề. Dấu — nghĩa là chưa đo, không phải 0.
 E0 là lượt Colab T4 đã có trong lịch sử repo; E1–E4 chạy qua Kaggle CLI.
+{live_note}
 
 ## Bảng kết quả
 
@@ -161,6 +170,8 @@ Biến chọn là `data_size`: 10% so với 100% ảnh train, các siêu tham s�
 kể cả 300 optimizer steps và effective batch=8. Như vậy mức 10% lặp lại dữ liệu nhiều hơn;
 đây là hiệu ứng giảm độ đa dạng ở cùng ngân sách bước, không phải cùng số epoch.
 Mốc 100% dùng lại đúng dự đoán của setup gốc theo GUIDE; chỉ train thêm mức 10%.
+Mức 10% dùng 142 ảnh đầu theo thứ tự split. Phân bố phiên/lớp có thể khác toàn bộ train,
+nên tác động đo được gồm giảm độ đa dạng và thay đổi thành phần mẫu, không chỉ số lượng.
 {' '.join(e4text) if e4text else 'Chưa có bằng chứng E4; chưa kết luận tác động của kích thước dữ liệu.'}
 Đọc kết quả kèm CI95 và giới hạn test nhỏ; không lựa chọn lại siêu tham số dựa vào test.
 

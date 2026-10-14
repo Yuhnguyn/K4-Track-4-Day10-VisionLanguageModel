@@ -7,6 +7,9 @@ Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E1, E2, E3, E4.
 Mọi số trong bảng lấy từ scorer của đề. Dấu — nghĩa là chưa đo, không phải 0.
 E0 là lượt Colab T4 đã có trong lịch sử repo; E1–E4 chạy qua Kaggle CLI.
 
+Kết quả E1 đã hiện trong stdout Kaggle version 4: F1=0,2596, CI95=[0,2278; 0,2978], JSON hợp lệ=0,9646, FP/ảnh=1,466; train=45,5127 phút, VRAM train=7,1231 GB. Đây là số được log, có làm tròn; đang chờ lấy file scorer JSON đầy đủ. Checkpoint này không thay thế report/evidence/e1.json.
+
+
 ## Bảng kết quả
 
 | Mã | Tham số huấn luyện | VRAM GB | Phút train | F1 | CI95 | FP/ảnh | pothole | crack | manhole |
@@ -111,6 +114,8 @@ Biến chọn là `data_size`: 10% so với 100% ảnh train, các siêu tham s�
 kể cả 300 optimizer steps và effective batch=8. Như vậy mức 10% lặp lại dữ liệu nhiều hơn;
 đây là hiệu ứng giảm độ đa dạng ở cùng ngân sách bước, không phải cùng số epoch.
 Mốc 100% dùng lại đúng dự đoán của setup gốc theo GUIDE; chỉ train thêm mức 10%.
+Mức 10% dùng 142 ảnh đầu theo thứ tự split. Phân bố phiên/lớp có thể khác toàn bộ train,
+nên tác động đo được gồm giảm độ đa dạng và thay đổi thành phần mẫu, không chỉ số lượng.
 Chưa có bằng chứng E4; chưa kết luận tác động của kích thước dữ liệu.
 Đọc kết quả kèm CI95 và giới hạn test nhỏ; không lựa chọn lại siêu tham số dựa vào test.
 
