@@ -3,13 +3,9 @@
 Họ tên: Nguyễn Huy
 `dataset_version`: `d10-21e4070301`
 
-Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E2, E4 (chưa đủ cả 10% và 100%).
+Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E4 (chưa đủ cả 10% và 100%).
 Mọi số trong bảng lấy từ scorer của đề. Dấu — nghĩa là chưa đo, không phải 0.
 E0 là lượt Colab T4 đã có trong lịch sử repo; E1–E4 chạy qua Kaggle CLI.
-
-E2 đã hoàn tất train: 46.2135 phút, VRAM=8.9413 GB. E2 | F1: 0.3071 | CI95: [0.2697, 0.3485] | valid: 0.9936 | FP/img: 1.103
-
-Các số trên lấy từ stdout, có làm tròn; đang chờ file scorer JSON đầy đủ. Checkpoint tiến độ không thay thế report/evidence/*.json.
 
 
 ## Bảng kết quả
@@ -18,8 +14,9 @@ Các số trên lấy từ stdout, có làm tròn; đang chờ file scorer JSON 
 |---|---|---:|---:|---:|---:|---|---:|---:|---:|---:|
 | E0 | Zero-shot | 0 | 4.1448 (suy luận) | 0.0000 | 0.0650 | 0.0441–0.0877 | 1.1897 | 0.0994 | 0.0040 | 0.1407 |
 | E1 | LoRA LLM | 33,030,144 | 7.1228 | 45.1248 | 0.2738 | 0.2395–0.3137 | 1.4502 | 0.2066 | 0.1906 | 0.5319 |
-| E2 | LoRA LLM + projector | 142,135,296 | 8.9413 | 46.2135 | Đang chờ scorer JSON | — | — | — | — | — |
+| E2 | LoRA LLM + projector | 142,135,296 | 8.9433 | 53.7009 | 0.3158 | 0.2796–0.3546 | 1.1093 | 0.1680 | 0.2432 | 0.5714 |
 | E3 | LoRA LLM + projector + LoRA ViT | 148,426,752 | 9.1324 | 64.8521 | 0.4078 | 0.3691–0.4491 | 1.1511 | 0.2477 | 0.3189 | 0.6981 |
+| E4_DATA_SIZE_1.0 | Ablation data_size | 148,426,752 | 9.1324 | 64.8521 | 0.4078 | 0.3691–0.4491 | 1.1511 | 0.2477 | 0.3189 | 0.6981 |
 
 E0 không huấn luyện; VRAM là suy luận. Log E0 ghi 1937,60 giây suy luận trong session, không gồm tải/nạp model.
 Các số VRAM dùng GB thập phân theo `torch.cuda.max_memory_allocated()/1e9`.
@@ -86,15 +83,15 @@ Chỉ bỏ annotation này khỏi target train, giữ ảnh và audit; giữ ngu
 
 ### Câu 7 — So sánh E1/E2/E3
 
-E1: F1=0.2738, CI95=[0.23945783132530118, 0.3137254901960784], chênh E0=+0.2088. E3: F1=0.4078, CI95=[0.36910569105691055, 0.44912280701754387], chênh E0=+0.3428.
-
+E1: F1=0.2738, CI95=[0.23945783132530118, 0.3137254901960784], chênh E0=+0.2088. E2: F1=0.3158, CI95=[0.279646017699115, 0.35463546354635467], chênh E0=+0.2508. E3: F1=0.4078, CI95=[0.36910569105691055, 0.44912280701754387], chênh E0=+0.3428.
+Nếu ưu tiên mức tăng F1 so với E0 trên mỗi phút train, tôi chọn E3 làm phương án đáng cân nhắc nhất trên T4. Đây là tiêu chí chi phí được nêu rõ, không phải kiểm định ý nghĩa thống kê; VRAM, F1 từng lớp và CI95 trong bảng vẫn là các giới hạn của lựa chọn.
 Đánh giá lợi ích phải đặt F1 và F1 từng lớp cạnh thời gian/VRAM.
 E2 thêm khoảng 109M tham số projector; E3 cần gradient qua ViT nên có thể tốn VRAM/thời gian hơn.
 Không đồng nhất dự đoán lý thuyết về chi phí với số đo. Các số thực tế nằm trong bảng.
 
 ### Câu 8 — Khoảng tin cậy
 
-Độ rộng CI95: E0: 0.0436. E1: 0.0743. E3: 0.0800.
+Độ rộng CI95: E0: 0.0436. E1: 0.0743. E2: 0.0750. E3: 0.0800.
 E0 có CI95=[0,0441; 0,0877], rộng khoảng 0,0436.
 Với 311 ảnh và chỉ 3 phiên test, không nên kết luận từ chênh lệch F1 nhỏ.
 CI của scorer bootstrap theo ảnh; các frame trong một phiên có tương quan nên CI này có thể
@@ -117,6 +114,12 @@ cần ảnh lỗi để đối chiếu. Box nhỏ khiến lệch vài pixel có 
 ![vlcsnap-2025-02-18-23h27m49s136: correct, best IoU=0.9281](report/figures/e1-04-correct.png)
 ![vlcsnap-2025-02-18-23h30m21s944: wrong_box, best IoU=0.4929](report/figures/e1-05-wrong_box.png)
 ![vlcsnap-2025-02-18-23h10m39s932: invalid_json, best IoU=0.0](report/figures/e1-06-invalid_json.png)
+![vlcsnap-2025-02-18-23h27m05s418: correct, best IoU=0.8755](report/figures/e2-01-correct.png)
+![vlcsnap-2025-02-19-17h05m39s299: wrong_box, best IoU=0.4981](report/figures/e2-02-wrong_box.png)
+![vlcsnap-2025-02-18-23h16m39s382: invalid_json, best IoU=0.0](report/figures/e2-03-invalid_json.png)
+![vlcsnap-2025-02-19-17h14m36s486: correct, best IoU=0.8717](report/figures/e2-04-correct.png)
+![vlcsnap-2025-02-18-23h15m06s511: wrong_box, best IoU=0.495](report/figures/e2-05-wrong_box.png)
+![vlcsnap-2025-02-19-17h03m29s526: invalid_json, best IoU=0.0](report/figures/e2-06-invalid_json.png)
 ![vlcsnap-2025-02-18-23h28m02s296: correct, best IoU=0.9472](report/figures/e3-01-correct.png)
 ![vlcsnap-2025-02-18-23h27m33s135: wrong_box, best IoU=0.4977](report/figures/e3-02-wrong_box.png)
 ![vlcsnap-2025-02-19-17h03m28s017: correct, best IoU=0.9366](report/figures/e3-03-correct.png)
@@ -130,10 +133,10 @@ Biến chọn là `data_size`: 10% so với 100% ảnh train, các siêu tham s�
 kể cả 300 optimizer steps và effective batch=8. Như vậy mức 10% lặp lại dữ liệu nhiều hơn;
 đây là hiệu ứng giảm độ đa dạng ở cùng ngân sách bước, không phải cùng số epoch.
 Mốc 100% dùng lại đúng dự đoán của setup gốc theo GUIDE; chỉ train thêm mức 10%.
-Đang chờ đủ E1–E3 để chọn setup gốc theo GUIDE.
+Setup gốc chọn theo GUIDE: E3, có F1 cao nhất trong ba setup cố định.
 Mức 10% dùng 142 ảnh đầu theo thứ tự split. Phân bố phiên/lớp có thể khác toàn bộ train,
 nên tác động đo được gồm giảm độ đa dạng và thay đổi thành phần mẫu, không chỉ số lượng.
-Chưa có bằng chứng E4; chưa kết luận tác động của kích thước dữ liệu.
+e4_data_size_1.0: F1=0.4078, CI95=[0.36910569105691055, 0.44912280701754387].
 Mức 10% chưa hoàn tất; chưa thể kết luận ablation.
 
 Đọc kết quả kèm CI95 và giới hạn test nhỏ; không lựa chọn lại siêu tham số dựa vào test.

@@ -1,0 +1,14 @@
+{
+  "changed_variable": "data_size",
+  "baseline": "e3",
+  "selection": "highest measured test F1 among fixed E1/E2/E3 setups, as GUIDE requests",
+  "f1": {
+    "e1": 0.2737896494156929,
+    "e2": 0.31578947368421045,
+    "e3": 0.4077834179357022
+  },
+  "fractions": [
+    0.1,
+    1.0
+  ]
+}
