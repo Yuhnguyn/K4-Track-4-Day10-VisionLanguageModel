@@ -51,7 +51,7 @@ def load_base_model(model_id, quantize=True):
     return model, processor
 
 
-def generate_predictions(model, processor, entries, data_dir, output, batch_size=4,
+def generate_predictions(model, processor, entries, data_dir, output, batch_size=12,
                          max_new_tokens=256, log=print):
     """Greedy generation into a raw JSONL file. Ground truth is never used here."""
     import torch
@@ -65,24 +65,35 @@ def generate_predictions(model, processor, entries, data_dir, output, batch_size
     if hasattr(model, "config"):
         model.config.use_cache = True
     written = 0
+    current = batch_size
+    start = 0
     with output.open("w", encoding="utf-8") as handle, torch.inference_mode():
-        for start in range(0, len(entries), batch_size):
-            batch = entries[start:start + batch_size]
+        while start < len(entries):
+            batch = entries[start:start + current]
             conversations = []
             for row in batch:
                 with Image.open(data_dir / row["image_path"]) as image:
                     image = image.convert("RGB")
                 conversations.append([{"role": "user", "content": [
                     {"type": "image", "image": image}, {"type": "text", "text": PROMPT}]}])
-            inputs = processor.apply_chat_template(
-                conversations, tokenize=True, add_generation_prompt=True,
-                return_dict=True, return_tensors="pt", padding=True).to(model.device)
-            if start == 0:
-                counts = (inputs["input_ids"] == model.config.image_token_id).sum(dim=1).tolist()
-                log(f"Vision tokens per image: {counts}")
-                if any(count != 220 for count in counts):
-                    raise RuntimeError("Unexpected vision-token count for 640x360 inputs")
-            generated = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False)
+            try:
+                inputs = processor.apply_chat_template(
+                    conversations, tokenize=True, add_generation_prompt=True,
+                    return_dict=True, return_tensors="pt", padding=True).to(model.device)
+                if start == 0:
+                    counts = (inputs["input_ids"] == model.config.image_token_id).sum(dim=1).tolist()
+                    log(f"Vision tokens per image: {counts}")
+                    if any(count != 220 for count in counts):
+                        raise RuntimeError("Unexpected vision-token count for 640x360 inputs")
+                generated = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False)
+            except torch.cuda.OutOfMemoryError:
+                # Batch chỉ là nút tốc độ, không phải biến của thí nghiệm: giảm nửa rồi thử lại đúng ảnh đó.
+                torch.cuda.empty_cache()
+                if current == 1:
+                    raise
+                current = max(1, current // 2)
+                log(f"CUDA OOM: giảm batch suy luận xuống {current} rồi thử lại")
+                continue
             raw = processor.batch_decode(generated[:, inputs["input_ids"].shape[1]:],
                                          skip_special_tokens=True)
             for row, text in zip(batch, raw):
@@ -91,7 +102,8 @@ def generate_predictions(model, processor, entries, data_dir, output, batch_size
                 written += 1
             handle.flush()
             os.fsync(handle.fileno())
-            log(f"{written}/{len(entries)} images | {time.perf_counter() - started:.1f}s")
+            log(f"{written}/{len(entries)} | batch={current} | {time.perf_counter() - started:.1f}s")
+            start += len(batch)
     return {"n_images": written, "inference_seconds": time.perf_counter() - started,
             "peak_vram_gb": torch.cuda.max_memory_allocated() / 1e9,
             "gpu": torch.cuda.get_device_name(0)}
