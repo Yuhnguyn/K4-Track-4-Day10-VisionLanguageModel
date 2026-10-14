@@ -97,7 +97,9 @@ def build(pred, data_dir="data", split="test", out_dir="report/figures", want=6,
 
     summary = {"split": split, "prediction_file": str(pred), "n_selected": len(tiles),
                "legend": {"GT_COLOR": GT_COLOR, "PRED_COLOR": PRED_COLOR},
-               "note": "Ground truth (green) and model prediction (red) drawn on the same image.",
+               "note": ("Ground truth (green) and model prediction (red) drawn on the same image. "
+                        "A correct tag means at least one same-class box has IoU >= 0.5; "
+                        "it does not mean all objects in that image were detected correctly."),
                "tiles": tiles}
     (out_dir / f"{prefix}-summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")

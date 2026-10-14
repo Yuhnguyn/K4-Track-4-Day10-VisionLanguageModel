@@ -114,9 +114,9 @@ assert e4_code == 0, Path('/kaggle/working/e4-worker.log').read_text()[-5000:]
 '''
     notebook = {'nbformat': 4, 'nbformat_minor': 5,
                 'metadata': {'kernelspec': {'display_name': 'Python 3', 'language': 'python', 'name': 'python3'}},
-                'cells': [{'cell_type': 'code', 'metadata': {}, 'execution_count': None,
+                'cells': [{'id': f'cell-{index}', 'cell_type': 'code', 'metadata': {}, 'execution_count': None,
                            'outputs': [], 'source': source.splitlines(keepends=True)}
-                          for source in (bootstrap, execution)]}
+                          for index, source in enumerate((bootstrap, execution))]}
     (output / 'run.ipynb').write_text(json.dumps(notebook), encoding='utf-8')
     metadata = {'id': f'{username}/day10-vlm-{experiment}-{int(fraction * 100)}',
                 'title': f'day10-vlm-{experiment}-{int(fraction * 100)}',
