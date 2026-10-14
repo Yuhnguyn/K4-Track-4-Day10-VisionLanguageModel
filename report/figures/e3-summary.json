@@ -1,0 +1,60 @@
+{
+  "split": "test",
+  "prediction_file": "work/e3.jsonl",
+  "n_selected": 6,
+  "legend": {
+    "GT_COLOR": "#41d97b",
+    "PRED_COLOR": "#ff6b6b"
+  },
+  "note": "Ground truth (green) and model prediction (red) drawn on the same image. A correct tag means at least one same-class box has IoU >= 0.5; it does not mean all objects in that image were detected correctly.",
+  "tiles": [
+    {
+      "tag": "correct",
+      "best_iou": 0.9472,
+      "image_id": "vlcsnap-2025-02-18-23h28m02s296",
+      "n_gt": 1,
+      "n_pred": 1,
+      "file": "report\\figures\\e3-01-correct.png"
+    },
+    {
+      "tag": "wrong_box",
+      "best_iou": 0.4977,
+      "image_id": "vlcsnap-2025-02-18-23h27m33s135",
+      "n_gt": 1,
+      "n_pred": 1,
+      "file": "report\\figures\\e3-02-wrong_box.png"
+    },
+    {
+      "tag": "correct",
+      "best_iou": 0.9366,
+      "image_id": "vlcsnap-2025-02-19-17h03m28s017",
+      "n_gt": 5,
+      "n_pred": 4,
+      "file": "report\\figures\\e3-03-correct.png"
+    },
+    {
+      "tag": "wrong_box",
+      "best_iou": 0.4875,
+      "image_id": "vlcsnap-2025-02-18-23h14m34s881",
+      "n_gt": 1,
+      "n_pred": 1,
+      "file": "report\\figures\\e3-04-wrong_box.png"
+    },
+    {
+      "tag": "correct",
+      "best_iou": 0.9235,
+      "image_id": "vlcsnap-2025-02-19-17h04m41s282",
+      "n_gt": 2,
+      "n_pred": 1,
+      "file": "report\\figures\\e3-05-correct.png"
+    },
+    {
+      "tag": "wrong_box",
+      "best_iou": 0.4863,
+      "image_id": "vlcsnap-2025-02-19-17h09m25s147",
+      "n_gt": 3,
+      "n_pred": 3,
+      "file": "report\\figures\\e3-06-wrong_box.png"
+    }
+  ]
+}

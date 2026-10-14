@@ -3,15 +3,11 @@
 Họ tên: Nguyễn Huy
 `dataset_version`: `d10-21e4070301`
 
-Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E1, E2, E3, E4 (chưa đủ cả 10% và 100%).
+Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E2, E4 (chưa đủ cả 10% và 100%).
 Mọi số trong bảng lấy từ scorer của đề. Dấu — nghĩa là chưa đo, không phải 0.
 E0 là lượt Colab T4 đã có trong lịch sử repo; E1–E4 chạy qua Kaggle CLI.
 
-E1 đã hoàn tất train: 45.5127 phút, VRAM=7.1231 GB. E1 | F1: 0.2596 | CI95: [0.2278, 0.2978] | valid: 0.9646 | FP/img: 1.466
-
 E2 đã hoàn tất train: 46.2135 phút, VRAM=8.9413 GB. E2 | F1: 0.3071 | CI95: [0.2697, 0.3485] | valid: 0.9936 | FP/img: 1.103
-
-E3 đã hoàn tất train: 64.8521 phút, VRAM=9.1324 GB. Chưa có điểm test trong log.
 
 Các số trên lấy từ stdout, có làm tròn; đang chờ file scorer JSON đầy đủ. Checkpoint tiến độ không thay thế report/evidence/*.json.
 
@@ -20,10 +16,10 @@ Các số trên lấy từ stdout, có làm tròn; đang chờ file scorer JSON 
 
 | Mã | Thiết lập | Tham số huấn luyện | VRAM GB | Phút train | Micro F1 | CI95 | FP/ảnh | F1 pothole | F1 crack | F1 manhole |
 |---|---|---:|---:|---:|---:|---|---:|---:|---:|---:|
-| E0 | Zero-shot | 0 | 4.1448 (suy luận) | 0 | 0.0650 | 0.0441–0.0877 | 1.1897 | 0.0994 | 0.0040 | 0.1407 |
+| E0 | Zero-shot | 0 | 4.1448 (suy luận) | 0.0000 | 0.0650 | 0.0441–0.0877 | 1.1897 | 0.0994 | 0.0040 | 0.1407 |
 | E1 | LoRA LLM | 33,030,144 | 7.1228 | 45.1248 | 0.2738 | 0.2395–0.3137 | 1.4502 | 0.2066 | 0.1906 | 0.5319 |
 | E2 | LoRA LLM + projector | 142,135,296 | 8.9413 | 46.2135 | Đang chờ scorer JSON | — | — | — | — | — |
-| E3 | LoRA LLM + projector + LoRA ViT | 148,426,752 | 9.1324 | 64.8521 | Đang chờ scorer JSON | — | — | — | — | — |
+| E3 | LoRA LLM + projector + LoRA ViT | 148,426,752 | 9.1324 | 64.8521 | 0.4078 | 0.3691–0.4491 | 1.1511 | 0.2477 | 0.3189 | 0.6981 |
 
 E0 không huấn luyện; VRAM là suy luận. Log E0 ghi 1937,60 giây suy luận trong session, không gồm tải/nạp model.
 Các số VRAM dùng GB thập phân theo `torch.cuda.max_memory_allocated()/1e9`.
@@ -53,7 +49,7 @@ Khi vẽ, x nhân `640/1000`, y nhân `360/1000`. Nhầm norm1000 thành pixel s
 phóng khác nhau theo hai trục, giảm IoU và thường giảm F1; không thể suy ra một F1 cụ thể khi chưa chấm.
 Round-trip thực tế ghi sai số tối đa 0,32 pixel so với box nguồn đã kẹp, phù hợp sai số làm tròn.
 Ví dụ `[400,400,600,600]` tương ứng pixel `[256,144,384,216]`.
-Chưa có phép chấm lại toàn bộ dự đoán theo thang sai; không ghi một số F1 giả cho kiểm chứng này.
+Kiểm tra bằng dự đoán E1 thực tế: chấm đúng norm1000 cho F1=0.2738; chấm cùng output nhầm là pixel cho F1=0.0000. Không huấn luyện hay sửa output trong kiểm tra này.
 
 ### Câu 4 — Mask loss
 
@@ -90,7 +86,7 @@ Chỉ bỏ annotation này khỏi target train, giữ ảnh và audit; giữ ngu
 
 ### Câu 7 — So sánh E1/E2/E3
 
-Chưa có kết quả test E1–E3; chưa kết luận setup nào tốt nhất.
+E1: F1=0.2738, CI95=[0.23945783132530118, 0.3137254901960784], chênh E0=+0.2088. E3: F1=0.4078, CI95=[0.36910569105691055, 0.44912280701754387], chênh E0=+0.3428.
 
 Đánh giá lợi ích phải đặt F1 và F1 từng lớp cạnh thời gian/VRAM.
 E2 thêm khoảng 109M tham số projector; E3 cần gradient qua ViT nên có thể tốn VRAM/thời gian hơn.
@@ -98,7 +94,7 @@ Không đồng nhất dự đoán lý thuyết về chi phí với số đo. Cá
 
 ### Câu 8 — Khoảng tin cậy
 
-Độ rộng CI95: E0: 0.0436.
+Độ rộng CI95: E0: 0.0436. E1: 0.0743. E3: 0.0800.
 E0 có CI95=[0,0441; 0,0877], rộng khoảng 0,0436.
 Với 311 ảnh và chỉ 3 phiên test, không nên kết luận từ chênh lệch F1 nhỏ.
 CI của scorer bootstrap theo ảnh; các frame trong một phiên có tương quan nên CI này có thể
@@ -113,9 +109,20 @@ Hình dạng dài/mảnh, box nhỏ, bóng đổ/vạch đường và định ng
 cần ảnh lỗi để đối chiếu. Box nhỏ khiến lệch vài pixel có thể giảm IoU mạnh.
 Ảnh minh họa dùng GT xanh và dự đoán đỏ, cả hai đều đổi norm1000 sang pixel trước khi vẽ.
 
+Ở E3 (F1 tổng cao nhất trong các lượt đã chấm), lớp yếu nhất là pothole: F1=0.2477, TP=27, FP=70, FN=94. Cần phân biệt lỗi này với lỗi zero-shot của E0; phân bố phiên và box nhỏ có thể ảnh hưởng, nhưng chưa có kiểm định nhân quả cho các giả thuyết đó.
 
-
-Ảnh dự đoán sẽ được tạo từ output model thực tế khi lượt GPU hoàn tất.
+![vlcsnap-2025-02-18-23h08m22s176: correct, best IoU=0.9306](report/figures/e1-01-correct.png)
+![vlcsnap-2025-02-18-23h15m04s500: wrong_box, best IoU=0.4996](report/figures/e1-02-wrong_box.png)
+![vlcsnap-2025-02-18-23h08m20s084: invalid_json, best IoU=0.0](report/figures/e1-03-invalid_json.png)
+![vlcsnap-2025-02-18-23h27m49s136: correct, best IoU=0.9281](report/figures/e1-04-correct.png)
+![vlcsnap-2025-02-18-23h30m21s944: wrong_box, best IoU=0.4929](report/figures/e1-05-wrong_box.png)
+![vlcsnap-2025-02-18-23h10m39s932: invalid_json, best IoU=0.0](report/figures/e1-06-invalid_json.png)
+![vlcsnap-2025-02-18-23h28m02s296: correct, best IoU=0.9472](report/figures/e3-01-correct.png)
+![vlcsnap-2025-02-18-23h27m33s135: wrong_box, best IoU=0.4977](report/figures/e3-02-wrong_box.png)
+![vlcsnap-2025-02-19-17h03m28s017: correct, best IoU=0.9366](report/figures/e3-03-correct.png)
+![vlcsnap-2025-02-18-23h14m34s881: wrong_box, best IoU=0.4875](report/figures/e3-04-wrong_box.png)
+![vlcsnap-2025-02-19-17h04m41s282: correct, best IoU=0.9235](report/figures/e3-05-correct.png)
+![vlcsnap-2025-02-19-17h09m25s147: wrong_box, best IoU=0.4863](report/figures/e3-06-wrong_box.png)
 
 ### Câu 10 — E4
 

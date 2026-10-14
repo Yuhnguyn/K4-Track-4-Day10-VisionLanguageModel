@@ -20,12 +20,19 @@ def main():
     pending = [key.upper() for key in ('e1', 'e2', 'e3') if key not in evidence]
     if not all(k in evidence for k in ('e4_data_size_0.1', 'e4_data_size_1.0')):
         pending.append('E4 (chưa đủ cả 10% và 100%)')
-    table = ['| Mã | Tham số huấn luyện | VRAM GB | Phút train | F1 | CI95 | FP/ảnh | pothole | crack | manhole |',
-             '|---|---:|---:|---:|---:|---|---:|---:|---:|---:|']
+    setups = {'e0': 'Zero-shot', 'e1': 'LoRA LLM', 'e2': 'LoRA LLM + projector',
+              'e3': 'LoRA LLM + projector + LoRA ViT'}
+    table = ['| Mã | Thiết lập | Tham số huấn luyện | VRAM GB | Phút train | Micro F1 | CI95 | FP/ảnh | F1 pothole | F1 crack | F1 manhole |',
+             '|---|---|---:|---:|---:|---:|---|---:|---:|---:|---:|']
     for key in ['e0', 'e1', 'e2', 'e3'] + sorted(k for k in evidence if k.startswith('e4')):
         item = evidence.get(key)
         if not item:
-            table.append(f'| {key.upper()} | — | — | — | Chưa có kết quả | — | — | — | — | — |')
+            progress = load(f'report/checkpoints/04-{key}-kaggle-progress.json').get('training', {})
+            params = progress.get('trainable_params')
+            params_text = f'{params:,}' if params is not None else '—'
+            vram_text = f"{progress['peak_vram_gb']:.4f}" if 'peak_vram_gb' in progress else '—'
+            minutes_text = f"{progress['train_minutes']:.4f}" if 'train_minutes' in progress else '—'
+            table.append(f'| {key.upper()} | {setups.get(key, "Ablation data_size")} | {params_text} | {vram_text} | {minutes_text} | Đang chờ scorer JSON | — | — | — | — | — |')
             continue
         meta = item.get('meta', {})
         vram = meta.get('peak_vram_gb')
@@ -33,8 +40,10 @@ def main():
             vram = load('report/checkpoints/03-e0-run.json').get('peak_vram_gb')
         f = lambda value: f'{value:.4f}' if isinstance(value, (int, float)) else '—'
         ci = '–'.join(f(v) for v in item['f1_ci95'])
-        cells = [key.upper(), str(meta.get('trainable_params', 0 if key == 'e0' else '—')),
-                 f(vram), f(meta.get('train_minutes', 0 if key == 'e0' else None)),
+        params = meta.get('trainable_params', 0 if key == 'e0' else None)
+        params_text = f'{params:,}' if isinstance(params, (int, float)) else '—'
+        cells = [key.upper(), setups.get(key, 'Ablation data_size'), params_text,
+                 f(vram) + (' (suy luận)' if key == 'e0' else ''), f(meta.get('train_minutes', 0 if key == 'e0' else None)),
                  f(item['micro']['f1']), ci, f(item['fp_per_image'])]
         cells += [f(item['per_class'][c]['f1']) for c in ('pothole', 'crack', 'manhole')]
         table.append('| ' + ' | '.join(cells) + ' |')
