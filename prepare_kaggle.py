@@ -97,7 +97,7 @@ finally:
         worker = worker.replace("tag = 'e3' if 1.0 == 1.0 else 'e3_d10'", "tag = 'e1_d10'")
         worker = worker.replace("fraction=1.0", "fraction=0.1")
         worker = worker.replace("tag if 1.0 == 1.0 else 'e4_data_size_0.1'", "'e4_data_size_0.1'")
-        imports = execution[:execution.index("print('GPU:")]
+        imports = 'import os, sys, subprocess\nfrom pathlib import Path\n' + execution[:execution.index("print('GPU:")]
         insertion = f'''\nPath('e4_worker.py').write_text({(imports + worker)!r})
 e4_log = open('/kaggle/working/e4-worker.log', 'w')
 e4_environment = dict(os.environ, CUDA_VISIBLE_DEVICES='1', PYTHONUNBUFFERED='1')

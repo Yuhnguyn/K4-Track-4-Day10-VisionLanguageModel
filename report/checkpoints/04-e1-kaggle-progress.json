@@ -1,0 +1,46 @@
+{
+  "source": "Kaggle live stdout from k4-track4-day10-vlm-lora-run version 4",
+  "status": "Training complete; test summary available",
+  "training": {
+    "lora_target_modules": 252,
+    "projector_tensors_unfrozen": 0,
+    "trainable_tensors": 504,
+    "trainable_params": 33030144,
+    "total_params": 2654188032,
+    "removed_training_annotations": [
+      {
+        "image_id": "vlcsnap-00058",
+        "object_index": 1,
+        "reason": "Source box has zero area",
+        "object": {
+          "label": "crack",
+          "yolo": [
+            0.639062,
+            0.786111,
+            0.003125,
+            0.0
+          ]
+        }
+      }
+    ],
+    "train_examples": 1422,
+    "name": "E1",
+    "seed": 42,
+    "max_steps": 300,
+    "batch_size": 2,
+    "grad_accum": 4,
+    "lr": 0.0002,
+    "train_fraction": 1.0,
+    "final_loss": 0.34977638721466064,
+    "first_loss": 1.3840010166168213,
+    "loss_is_finite": true,
+    "train_minutes": 45.51274054853333,
+    "peak_vram_gb": 7.123106816,
+    "gpu": "Tesla T4"
+  },
+  "scorer_stdout_summary": [
+    "E1 [test] n=311 valid=0.965 P=0.254 R=0.266 F1=0.260 CI95=0.228-0.298 meanIoU=0.677 FP/img=1.47",
+    "E1 | F1: 0.2596 | CI95: [0.2278, 0.2978] | valid: 0.9646 | FP/img: 1.466 | F1 theo lá»p: {'pothole': 0.2009, 'crack': 0.1689, 'manhole': 0.5208, 'other': 0.0}"
+  ],
+  "limitation": "Scorer stdout rounds metrics. This checkpoint is not report/evidence/e1.json and does not replace the scorer output file."
+}
