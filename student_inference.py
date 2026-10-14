@@ -67,6 +67,7 @@ def generate_predictions(model, processor, entries, data_dir, output, batch_size
     written = 0
     current = batch_size
     start = 0
+    oom_error = torch.cuda.OutOfMemoryError  # lấy một lần để test tiêm được lớp lỗi giả
     with output.open("w", encoding="utf-8") as handle, torch.inference_mode():
         while start < len(entries):
             batch = entries[start:start + current]
@@ -86,7 +87,7 @@ def generate_predictions(model, processor, entries, data_dir, output, batch_size
                     if any(count != 220 for count in counts):
                         raise RuntimeError("Unexpected vision-token count for 640x360 inputs")
                 generated = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False)
-            except torch.cuda.OutOfMemoryError:
+            except oom_error:
                 # Batch chỉ là nút tốc độ, không phải biến của thí nghiệm: giảm nửa rồi thử lại đúng ảnh đó.
                 torch.cuda.empty_cache()
                 if current == 1:
