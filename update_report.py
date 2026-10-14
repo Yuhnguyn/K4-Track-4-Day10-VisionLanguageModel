@@ -168,7 +168,9 @@ Mốc 100% dùng lại đúng dự đoán của setup gốc theo GUIDE; chỉ tr
 
 Các điểm dễ sai là mask loss, loại visual khỏi NF4, lưu/nạp projector và quy đổi tọa độ khi vẽ.
 Đã sửa lỗi ảnh minh họa dùng tọa độ norm1000 trực tiếp như pixel và lỗi tiếp tục cache E0 ghi đè phần đã chạy.
-Không sửa `scripts/` và `tests/` của đề. E5 là tùy chọn và chưa chạy.
+Không sửa `scripts/` và `tests/` của đề. Phần E5 có hàm reward IoU Python thuần trong
+`student_reward.py` và 6 test (hoàn hảo, JSON hỏng, sai lớp, thừa box, rỗng, box khổng lồ).
+Chưa chạy GRPO; chưa có kết quả RL hay kết luận reward hacking từ thực nghiệm.
 Phần thiếu bằng chứng vẫn phải được hoàn tất trước khi gọi bài là hoàn chỉnh.
 '''
     (ROOT / 'REPORT.md').write_text(text, encoding='utf-8')
