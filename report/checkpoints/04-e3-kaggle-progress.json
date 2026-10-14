@@ -1,0 +1,43 @@
+{
+  "source": "Kaggle day10-vlm-e3-100 version 3 live stdout",
+  "status": "Training complete; inference in progress",
+  "training": {
+    "lora_target_modules": 348,
+    "projector_tensors_unfrozen": 24,
+    "trainable_tensors": 720,
+    "trainable_params": 148426752,
+    "total_params": 2660479488,
+    "removed_training_annotations": [
+      {
+        "image_id": "vlcsnap-00058",
+        "object_index": 1,
+        "reason": "Source box has zero area",
+        "object": {
+          "label": "crack",
+          "yolo": [
+            0.639062,
+            0.786111,
+            0.003125,
+            0.0
+          ]
+        }
+      }
+    ],
+    "train_examples": 1422,
+    "name": "E3",
+    "seed": 42,
+    "max_steps": 300,
+    "batch_size": 2,
+    "grad_accum": 4,
+    "lr": 0.0002,
+    "train_fraction": 1.0,
+    "final_loss": 0.30337923765182495,
+    "first_loss": 1.3840010166168213,
+    "loss_is_finite": true,
+    "train_minutes": 64.85214795203333,
+    "peak_vram_gb": 9.132441088,
+    "gpu": "Tesla T4"
+  },
+  "scorer_stdout_summary": [],
+  "limitation": "Training checkpoint only; official E3 test scorer file pending"
+}

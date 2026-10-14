@@ -89,14 +89,20 @@ def main():
                   f"{scale_check['micro']['f1']:.4f}. Không huấn luyện hay sửa output trong kiểm tra này."
                   if scale_check and 'e1' in evidence else
                   'Chưa có phép chấm lại toàn bộ dự đoán theo thang sai; không ghi một số F1 giả cho kiểm chứng này.')
-    live = load('report/checkpoints/04-e1-kaggle-progress.json') if 'e1' not in evidence else {}
-    live_note = ''
-    if live:
-        live_note = ('\nKết quả E1 đã hiện trong stdout Kaggle version 4: F1=0,2596, '
-                     'CI95=[0,2278; 0,2978], JSON hợp lệ=0,9646, FP/ảnh=1,466; '
-                     'train=45,5127 phút, VRAM train=7,1231 GB. '
-                     'Đây là số được log, có làm tròn; đang chờ lấy file scorer JSON đầy đủ. '
-                     'Checkpoint này không thay thế report/evidence/e1.json.\n')
+    live_notes = []
+    for key in ('e1', 'e2', 'e3'):
+        live = load(f'report/checkpoints/04-{key}-kaggle-progress.json') if key not in evidence else {}
+        if not live:
+            continue
+        training = live['training']
+        lines = live.get('scorer_stdout_summary', [])
+        summary = next((line.split(' | F1 theo')[0] for line in reversed(lines)
+                        if line.startswith(key.upper() + ' | F1:')), 'Chưa có điểm test trong log.')
+        live_notes.append(f"{key.upper()} đã hoàn tất train: {training['train_minutes']:.4f} phút, "
+                          f"VRAM={training['peak_vram_gb']:.4f} GB. {summary}")
+    live_note = ('\n' + '\n\n'.join(live_notes) +
+                 '\n\nCác số trên lấy từ stdout, có làm tròn; đang chờ file scorer JSON đầy đủ. '
+                 'Checkpoint tiến độ không thay thế report/evidence/*.json.\n') if live_notes else ''
     figures = []
     for summary in (ROOT / 'report/figures').glob('*-summary.json') if (ROOT / 'report/figures').exists() else []:
         for tile in json.loads(summary.read_text(encoding='utf-8'))['tiles']:

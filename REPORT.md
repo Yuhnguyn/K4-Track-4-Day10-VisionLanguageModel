@@ -7,7 +7,13 @@ Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E1, E2, E3, E4 (ch
 Mọi số trong bảng lấy từ scorer của đề. Dấu — nghĩa là chưa đo, không phải 0.
 E0 là lượt Colab T4 đã có trong lịch sử repo; E1–E4 chạy qua Kaggle CLI.
 
-Kết quả E1 đã hiện trong stdout Kaggle version 4: F1=0,2596, CI95=[0,2278; 0,2978], JSON hợp lệ=0,9646, FP/ảnh=1,466; train=45,5127 phút, VRAM train=7,1231 GB. Đây là số được log, có làm tròn; đang chờ lấy file scorer JSON đầy đủ. Checkpoint này không thay thế report/evidence/e1.json.
+E1 đã hoàn tất train: 45.5127 phút, VRAM=7.1231 GB. E1 | F1: 0.2596 | CI95: [0.2278, 0.2978] | valid: 0.9646 | FP/img: 1.466
+
+E2 đã hoàn tất train: 46.2135 phút, VRAM=8.9413 GB. E2 | F1: 0.3071 | CI95: [0.2697, 0.3485] | valid: 0.9936 | FP/img: 1.103
+
+E3 đã hoàn tất train: 64.8521 phút, VRAM=9.1324 GB. Chưa có điểm test trong log.
+
+Các số trên lấy từ stdout, có làm tròn; đang chờ file scorer JSON đầy đủ. Checkpoint tiến độ không thay thế report/evidence/*.json.
 
 
 ## Bảng kết quả
