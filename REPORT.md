@@ -18,12 +18,12 @@ Các số trên lấy từ stdout, có làm tròn; đang chờ file scorer JSON 
 
 ## Bảng kết quả
 
-| Mã | Tham số huấn luyện | VRAM GB | Phút train | F1 | CI95 | FP/ảnh | pothole | crack | manhole |
-|---|---:|---:|---:|---:|---|---:|---:|---:|---:|
-| E0 | 0 | 4.1448 | 0.0000 | 0.0650 | 0.0441–0.0877 | 1.1897 | 0.0994 | 0.0040 | 0.1407 |
-| E1 | — | — | — | Chưa có kết quả | — | — | — | — | — |
-| E2 | — | — | — | Chưa có kết quả | — | — | — | — | — |
-| E3 | — | — | — | Chưa có kết quả | — | — | — | — | — |
+| Mã | Thiết lập | Tham số huấn luyện | VRAM GB | Phút train | Micro F1 | CI95 | FP/ảnh | F1 pothole | F1 crack | F1 manhole |
+|---|---|---:|---:|---:|---:|---|---:|---:|---:|---:|
+| E0 | Zero-shot | 0 | 4.1448 (suy luận) | 0 | 0.0650 | 0.0441–0.0877 | 1.1897 | 0.0994 | 0.0040 | 0.1407 |
+| E1 | LoRA LLM | 33,030,144 | 7.1228 | 45.1248 | 0.2738 | 0.2395–0.3137 | 1.4502 | 0.2066 | 0.1906 | 0.5319 |
+| E2 | LoRA LLM + projector | 142,135,296 | 8.9413 | 46.2135 | Đang chờ scorer JSON | — | — | — | — | — |
+| E3 | LoRA LLM + projector + LoRA ViT | 148,426,752 | 9.1324 | 64.8521 | Đang chờ scorer JSON | — | — | — | — | — |
 
 E0 không huấn luyện; VRAM là suy luận. Log E0 ghi 1937,60 giây suy luận trong session, không gồm tải/nạp model.
 Các số VRAM dùng GB thập phân theo `torch.cuda.max_memory_allocated()/1e9`.
