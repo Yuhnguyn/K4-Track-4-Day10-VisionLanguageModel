@@ -183,7 +183,10 @@ def train_setup(model, processor, config, rows, data_dir, out_dir, log=print, fr
     out_dir.mkdir(parents=True, exist_ok=True)
     device = next(model.parameters()).device
     model.config.use_cache = False
-    model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+    try:
+        model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+    except TypeError:  # signature khác giữa các bản transformers
+        model.gradient_checkpointing_enable()
 
     examples, removed = build_examples(processor, rows, data_dir, fraction)
     collate = make_collate(processor.tokenizer.pad_token_id)
