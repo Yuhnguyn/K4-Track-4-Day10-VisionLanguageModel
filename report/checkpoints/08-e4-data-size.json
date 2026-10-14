@@ -1,0 +1,43 @@
+{
+  "changed_variable": "data_size",
+  "baseline": "e3",
+  "selection": "highest measured test F1 among fixed E1/E2/E3 setups, as GUIDE requests",
+  "fractions": [
+    0.1,
+    1.0
+  ],
+  "runs": {
+    "0.1": {
+      "scored_name": "E4_data_size_0.1",
+      "run_config_name": "E3",
+      "train_fraction": 0.1,
+      "train_examples": 142,
+      "max_steps": 300,
+      "batch_size": 2,
+      "grad_accum": 4,
+      "learning_rate": 0.0002,
+      "trainable_params": 148426752,
+      "peak_vram_gb": 9.133620736,
+      "train_minutes": 55.02072896788333,
+      "predictions": "work/e3_d10.jsonl",
+      "n_test_predictions": 311,
+      "micro_f1": 0.24528301886792453,
+      "f1_ci95": [
+        0.2107969151670951,
+        0.28061224489795916
+      ],
+      "completed_at_local": "2026-10-14T13:06:46+07:00",
+      "completed_after_submission_deadline": true
+    },
+    "1.0": {
+      "scored_name": "E4_data_size_1.0",
+      "source_predictions": "work/e3.jsonl",
+      "n_test_predictions": 311,
+      "micro_f1": 0.4077834179357022,
+      "evidence": "report/evidence/e4_data_size_1.0.json",
+      "reused_as_per_GUIDE": true
+    }
+  },
+  "status": "both measured levels available; 10% run completed after the submission deadline",
+  "lms_resubmitted": false
+}

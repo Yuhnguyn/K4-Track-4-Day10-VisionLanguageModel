@@ -1,0 +1,60 @@
+{
+  "split": "test",
+  "prediction_file": "work/e3_d10.jsonl",
+  "n_selected": 6,
+  "legend": {
+    "GT_COLOR": "#41d97b",
+    "PRED_COLOR": "#ff6b6b"
+  },
+  "note": "Ground truth (green) and model prediction (red) drawn on the same image.",
+  "tiles": [
+    {
+      "tag": "correct",
+      "best_iou": 0.9089,
+      "image_id": "vlcsnap-2025-02-19-17h04m44s457",
+      "n_gt": 3,
+      "n_pred": 3,
+      "file": "report/figures/e3_d10-01-correct.png"
+    },
+    {
+      "tag": "wrong_box",
+      "best_iou": 0.4963,
+      "image_id": "vlcsnap-2025-02-19-17h02m57s019",
+      "n_gt": 2,
+      "n_pred": 1,
+      "file": "report/figures/e3_d10-02-wrong_box.png"
+    },
+    {
+      "tag": "correct",
+      "best_iou": 0.8907,
+      "image_id": "vlcsnap-00200",
+      "n_gt": 2,
+      "n_pred": 3,
+      "file": "report/figures/e3_d10-03-correct.png"
+    },
+    {
+      "tag": "wrong_box",
+      "best_iou": 0.4958,
+      "image_id": "vlcsnap-2025-02-18-23h08m18s609",
+      "n_gt": 2,
+      "n_pred": 2,
+      "file": "report/figures/e3_d10-04-wrong_box.png"
+    },
+    {
+      "tag": "correct",
+      "best_iou": 0.882,
+      "image_id": "vlcsnap-2025-02-18-23h18m23s887",
+      "n_gt": 1,
+      "n_pred": 3,
+      "file": "report/figures/e3_d10-05-correct.png"
+    },
+    {
+      "tag": "wrong_box",
+      "best_iou": 0.4949,
+      "image_id": "vlcsnap-2025-02-18-23h23m55s225",
+      "n_gt": 1,
+      "n_pred": 1,
+      "file": "report/figures/e3_d10-06-wrong_box.png"
+    }
+  ]
+}

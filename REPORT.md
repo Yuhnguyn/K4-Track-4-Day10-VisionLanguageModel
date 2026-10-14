@@ -3,7 +3,7 @@
 Họ tên: Nguyễn Huy
 `dataset_version`: `d10-21e4070301`
 
-Trạng thái: Chưa hoàn tất; còn thiếu bằng chứng E4 (chưa đủ cả 10% và 100%).
+Trạng thái: Đã có bằng chứng E0–E4.
 Mọi số trong bảng lấy từ scorer của đề. Dấu — nghĩa là chưa đo, không phải 0.
 E0 là lượt Colab T4 đã có trong lịch sử repo; E1–E4 chạy qua Kaggle CLI.
 
@@ -16,6 +16,7 @@ E0 là lượt Colab T4 đã có trong lịch sử repo; E1–E4 chạy qua Kagg
 | E1 | LoRA LLM | 33,030,144 | 7.1228 | 45.1248 | 0.2738 | 0.2395–0.3137 | 1.4502 | 0.2066 | 0.1906 | 0.5319 |
 | E2 | LoRA LLM + projector | 142,135,296 | 8.9433 | 53.7009 | 0.3158 | 0.2796–0.3546 | 1.1093 | 0.1680 | 0.2432 | 0.5714 |
 | E3 | LoRA LLM + projector + LoRA ViT | 148,426,752 | 9.1324 | 64.8521 | 0.4078 | 0.3691–0.4491 | 1.1511 | 0.2477 | 0.3189 | 0.6981 |
+| E4_DATA_SIZE_0.1 | Ablation data_size | 148,426,752 | 9.1336 | 55.0207 | 0.2453 | 0.2108–0.2806 | 1.4148 | 0.1836 | 0.1720 | 0.4776 |
 | E4_DATA_SIZE_1.0 | Ablation data_size | 148,426,752 | 9.1324 | 64.8521 | 0.4078 | 0.3691–0.4491 | 1.1511 | 0.2477 | 0.3189 | 0.6981 |
 
 E0 không huấn luyện; VRAM là suy luận. Log E0 ghi 1937,60 giây suy luận trong session, không gồm tải/nạp model.
@@ -126,6 +127,12 @@ cần ảnh lỗi để đối chiếu. Box nhỏ khiến lệch vài pixel có 
 ![vlcsnap-2025-02-18-23h14m34s881: wrong_box, best IoU=0.4875](report/figures/e3-04-wrong_box.png)
 ![vlcsnap-2025-02-19-17h04m41s282: correct, best IoU=0.9235](report/figures/e3-05-correct.png)
 ![vlcsnap-2025-02-19-17h09m25s147: wrong_box, best IoU=0.4863](report/figures/e3-06-wrong_box.png)
+![vlcsnap-2025-02-19-17h04m44s457: correct, best IoU=0.9089](report/figures/e3_d10-01-correct.png)
+![vlcsnap-2025-02-19-17h02m57s019: wrong_box, best IoU=0.4963](report/figures/e3_d10-02-wrong_box.png)
+![vlcsnap-00200: correct, best IoU=0.8907](report/figures/e3_d10-03-correct.png)
+![vlcsnap-2025-02-18-23h08m18s609: wrong_box, best IoU=0.4958](report/figures/e3_d10-04-wrong_box.png)
+![vlcsnap-2025-02-18-23h18m23s887: correct, best IoU=0.882](report/figures/e3_d10-05-correct.png)
+![vlcsnap-2025-02-18-23h23m55s225: wrong_box, best IoU=0.4949](report/figures/e3_d10-06-wrong_box.png)
 
 ### Câu 10 — E4
 
@@ -136,9 +143,10 @@ Mốc 100% dùng lại đúng dự đoán của setup gốc theo GUIDE; chỉ tr
 Setup gốc chọn theo GUIDE: E3, có F1 cao nhất trong ba setup cố định.
 Mức 10% dùng 142 ảnh đầu theo thứ tự split. Phân bố phiên/lớp có thể khác toàn bộ train,
 nên tác động đo được gồm giảm độ đa dạng và thay đổi thành phần mẫu, không chỉ số lượng.
-e4_data_size_1.0: F1=0.4078, CI95=[0.36910569105691055, 0.44912280701754387].
-Mức 10% chưa hoàn tất; chưa thể kết luận ablation.
+e4_data_size_0.1: F1=0.2453, CI95=[0.2107969151670951, 0.28061224489795916]. e4_data_size_1.0: F1=0.4078, CI95=[0.36910569105691055, 0.44912280701754387].
+Lượt E4 data_size=10% hoàn tất lúc 13:06 ngày 14/10/2026 (giờ Việt Nam), sau hạn nộp 12:00; kết quả hoàn tất không được nộp lại lên LMS.
 
+Chênh F1 (100% trừ 10%)=+0.1625. Hai CI95 không chồng nhau; khác biệt rõ trên test này, nhưng vẫn cần kiểm định ghép cặp và thêm phiên quay để kết luận rộng hơn.
 Đọc kết quả kèm CI95 và giới hạn test nhỏ; không lựa chọn lại siêu tham số dựa vào test.
 
 ## Nhìn lại

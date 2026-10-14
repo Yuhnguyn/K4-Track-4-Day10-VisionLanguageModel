@@ -19,6 +19,6 @@ Tài liệu ghi lại các vấn đề thực tế gặp trong quá trình chạ
 
 ## E4 và giới hạn xác nhận
 
-- E4 dùng cùng cấu hình đã chọn cho E3. Chạy subprocess gặp lỗi import; lượt 10% được chuyển sang phiên tương tác được cho phép. Tại thời điểm đóng gói, lượt 10% vẫn đang chạy, chưa có raw predictions hay evidence scorer. Vì vậy báo cáo chỉ có mốc 100% được GUIDE cho phép tái sử dụng từ E3, và không tuyên bố ablation hai mức đã hoàn tất.
+- E4 dùng cấu hình E3 đã chọn. Lượt 10% chạy với 142 ảnh train, 300 optimizer steps, batch 2 và grad accumulation 4. Chạy subprocess gặp lỗi import; lượt này được tiếp tục trong phiên tương tác được cho phép. Raw predictions có 311 dòng và được chấm lại bằng scorer gốc; F1=0.2453, CI95=[0.2108, 0.2806], parse-valid=1.0. Metadata run ghi 148,426,752 tham số, peak VRAM 9.1336 GB và 55.0207 phút. Evidence scorer giữ nhãn E4_data_size_0.1; run config gốc ghi E3 và train_fraction=0.1 để bảo toàn nguồn gốc. Mốc 100% tái sử dụng dự đoán E3 theo GUIDE, F1=0.4078. Lượt 10% chỉ hoàn tất sau hạn nộp 12:00 ngày 14/10/2026; bài đã nộp LMS trước đó và không có lần nộp lại được ghi nhận.
 - Không có xác nhận chạy `RunAll` trong runtime sạch; không ghi nhận đây là kiểm thử đã thực hiện.
 - Một test của template gốc cố ý kiểm tra placeholder chuỗi `<điền>`. Sau khi điền báo cáo, test đó không còn phù hợp với nội dung hoàn chỉnh nên được loại khỏi kiểm tra nộp; các file `tests/` được giữ nguyên, không sửa.
