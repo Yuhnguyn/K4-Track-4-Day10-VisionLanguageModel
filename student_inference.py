@@ -52,7 +52,7 @@ def load_base_model(model_id, quantize=True):
 
 
 def generate_predictions(model, processor, entries, data_dir, output, batch_size=12,
-                         max_new_tokens=256, log=print):
+                         max_new_tokens=256, log=print, append=False):
     """Greedy generation into a raw JSONL file. Ground truth is never used here."""
     import torch
     data_dir, output = Path(data_dir), Path(output)
@@ -68,7 +68,7 @@ def generate_predictions(model, processor, entries, data_dir, output, batch_size
     current = batch_size
     start = 0
     oom_error = torch.cuda.OutOfMemoryError  # lấy một lần để test tiêm được lớp lỗi giả
-    with output.open("w", encoding="utf-8") as handle, torch.inference_mode():
+    with output.open("a" if append else "w", encoding="utf-8") as handle, torch.inference_mode():
         while start < len(entries):
             batch = entries[start:start + current]
             conversations = []
@@ -149,7 +149,7 @@ def predict_split(config_path="configs/e0.yaml", split="test", data_dir="data",
         return output
     model, processor = load_base_model(config["model_id"])
     run = generate_predictions(model, processor, pending, data_dir, output, batch_size,
-                               config["max_new_tokens"])
+                               config["max_new_tokens"], append=bool(seen))
     run.update({"split": split, "trainable_params": 0, "variant": variant or "E0"})
     output.with_suffix(".run.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
     print(json.dumps(run), flush=True)

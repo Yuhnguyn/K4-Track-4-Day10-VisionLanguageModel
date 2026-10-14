@@ -1,7 +1,7 @@
 """Checks for the rubric-figure matcher. Synthetic boxes only, never model evidence."""
 from PIL import Image
 
-from student_figures import build, match_one
+from student_figures import build, match_one, render, GT_COLOR
 
 
 def _entry(image_id="a", objects=None, width=640, height=360):
@@ -50,6 +50,17 @@ def test_invalid_json_is_its_own_tag():
 
 def test_empty_on_both_sides_is_correct_by_definition():
     assert match_one(_entry(), "[]")[0] == "both_empty"
+
+
+def test_render_converts_normalized_boxes_to_image_pixels(tmp_path):
+    from PIL import ImageColor, ImageFont
+    Image.new('RGB', (640, 360), (20, 20, 20)).save(tmp_path / 'img.jpg')
+    entry = _entry(objects=[_obj('pothole', 0.5, 0.5, 0.2, 0.2)])
+    output = tmp_path / 'result.png'
+    render(entry, '[]', tmp_path, output, ImageFont.load_default())
+    with Image.open(output) as image:
+        assert image.getpixel((256, 180)) == ImageColor.getrgb(GT_COLOR)
+        assert image.getpixel((400, 180)) != ImageColor.getrgb(GT_COLOR)
 
 
 def test_build_writes_images_and_summary(tmp_path):

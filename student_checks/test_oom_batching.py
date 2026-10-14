@@ -156,3 +156,15 @@ def test_oom_at_batch_one_is_raised_not_hidden(fake_torch, dataset, tmp_path):
 def test_rejects_non_positive_batch(fake_torch, dataset, tmp_path):
     with pytest.raises(ValueError, match="positive"):
         run(dataset, tmp_path, FakeModel(oom_above=99), batch_size=0)
+
+
+def test_resume_appends_without_erasing_previous_images(fake_torch, dataset, tmp_path):
+    output = tmp_path / 'pred.jsonl'
+    old = {'image_id': 'id0', 'raw': 'original raw output'}
+    output.write_text(json.dumps(old) + '\n', encoding='utf-8')
+    student_inference.generate_predictions(
+        FakeModel(99), FakeProcessor(), dataset[1:], tmp_path, output,
+        batch_size=2, append=True, log=lambda *a: None)
+    rows = [json.loads(line) for line in output.read_text().splitlines()]
+    assert rows[0] == old
+    assert [row['image_id'] for row in rows] == [row['image_id'] for row in dataset]

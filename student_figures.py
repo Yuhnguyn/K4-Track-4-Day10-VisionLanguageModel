@@ -40,13 +40,18 @@ def render(entry, raw, data_dir, out_path, font):
     with Image.open(Path(data_dir) / entry["image_path"]) as handle:
         image = handle.convert("RGB")
     draw = ImageDraw.Draw(image)
+    def pixels(box):
+        return tuple(value * (image.width if index % 2 == 0 else image.height) / 1000
+                     for index, value in enumerate(box))
     for truth in _gt_boxes(entry):
-        draw.rectangle(tuple(truth["bbox"]), outline=GT_COLOR, width=3)
-        draw.text((truth["bbox"][0] + 3, truth["bbox"][1] + 3), f"GT {truth['label']}",
+        box = pixels(truth["bbox"])
+        draw.rectangle(box, outline=GT_COLOR, width=3)
+        draw.text((box[0] + 3, box[1] + 3), f"GT {truth['label']}",
                   font=font, fill=GT_COLOR)
     for prediction in parsed:
-        draw.rectangle(tuple(prediction["bbox"]), outline=PRED_COLOR, width=2)
-        draw.text((prediction["bbox"][0] + 3, prediction["bbox"][3] - 18),
+        box = pixels(prediction["bbox"])
+        draw.rectangle(box, outline=PRED_COLOR, width=2)
+        draw.text((box[0] + 3, box[3] - 18),
                   f"PRED {prediction['label']}", font=font, fill=PRED_COLOR)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     image.save(out_path)
@@ -73,11 +78,12 @@ def build(pred, data_dir="data", split="test", out_dir="report/figures", want=6,
     # Prefer a mix: correct hits, wrong boxes, and an invalid one for the error analysis.
     order = ["correct", "wrong_box", "hallucinated", "missed_all", "invalid_json", "both_empty"]
     chosen = []
-    for tag in order:
-        for score, entry, raw in sorted(buckets.get(tag, []), key=lambda item: -item[0]):
-            if len(chosen) >= want:
-                break
-            chosen.append((tag, score, entry, raw))
+    ranked = {tag: sorted(buckets.get(tag, []), key=lambda item: -item[0]) for tag in order}
+    while len(chosen) < want and any(ranked.values()):
+        for tag in order:
+            if ranked[tag] and len(chosen) < want:
+                score, entry, raw = ranked[tag].pop(0)
+                chosen.append((tag, score, entry, raw))
     if not chosen:
         raise ValueError("No predictions to illustrate")
 
